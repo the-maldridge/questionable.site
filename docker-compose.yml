@@ -11,6 +11,7 @@ services:
       - "--providers.docker=true"
       - "--providers.docker.exposedbydefault=false"
       - "--entrypoints.http.address=:80"
+      - "--entrypoints.http.http.redirections.entryPoint.to=https"
       - "--entrypoints.https.address=:443"
       - "--certificatesresolvers.letsencrypt.acme.httpchallenge=true"
       - "--certificatesresolvers.letsencrypt.acme.httpchallenge.entrypoint=http"
@@ -35,7 +36,7 @@ services:
       - "-seed"
       - "${LINKS_SEED}"
       - "-url"
-      - "questionable.site/link/"
+      - "https://questionable.site/link/"
       - "-v"
     volumes:
       - links:/db
@@ -46,6 +47,20 @@ services:
       - "traefik.http.routers.links.tls.certresolver=letsencrypt"
       - "traefik.http.routers.links.middlewares=links-stripprefix@docker"
       - "traefik.http.middlewares.links-stripprefix.stripprefix.prefixes=/link"
+
+  install:
+    build: ./install
+    container_name: install
+    restart: always
+    environment:
+      USER: the-maldridge
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.install.rule=Host(`questionable.site`, `www.questionable.site`) && PathPrefix(`/install`)"
+      - "traefik.http.routers.install.entrypoints=https"
+      - "traefik.http.routers.install.tls.certresolver=letsencrypt"
+      - "traefik.http.routers.install.middlewares=install-stripprefix@docker"
+      - "traefik.http.middlewares.install-stripprefix.stripprefix.prefixes=/install"
 
 volumes:
   letsencrypt:
