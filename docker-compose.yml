@@ -1,0 +1,52 @@
+version: "3.3"
+
+services:
+
+  traefik:
+    image: "traefik:v2.5.6"
+    container_name: "traefik"
+    restart: "always"
+    command:
+      - "--api.insecure=true"
+      - "--providers.docker=true"
+      - "--providers.docker.exposedbydefault=false"
+      - "--entrypoints.http.address=:80"
+      - "--entrypoints.https.address=:443"
+      - "--certificatesresolvers.letsencrypt.acme.httpchallenge=true"
+      - "--certificatesresolvers.letsencrypt.acme.httpchallenge.entrypoint=http"
+      - "--certificatesresolvers.letsencrypt.acme.email=letsencrypt@questionable.site"
+      - "--certificatesresolvers.letsencrypt.acme.storage=/letsencrypt/acme.json"
+      - "--pilot.dashboard=false"
+    ports:
+      - "80:80"
+      - "443:443"
+      - "8080:8080"
+    volumes:
+      - "/var/run/docker.sock:/var/run/docker.sock:ro"
+      - "letsencrypt:/letsencrypt"
+
+  links:
+    build: ./links
+    container_name: links
+    restart: always
+    command:
+      - "-db"
+      - "/db/links"
+      - "-seed"
+      - "${LINKS_SEED}"
+      - "-url"
+      - "questionable.site/link/"
+      - "-v"
+    volumes:
+      - links:/db
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.links.rule=Host(`questionable.site`, `www.questionable.site`) && PathPrefix(`/link`)"
+      - "traefik.http.routers.links.entrypoints=https"
+      - "traefik.http.routers.links.tls.certresolver=letsencrypt"
+      - "traefik.http.routers.links.middlewares=links-stripprefix@docker"
+      - "traefik.http.middlewares.links-stripprefix.stripprefix.prefixes=/link"
+
+volumes:
+  letsencrypt:
+  links:
