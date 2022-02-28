@@ -62,6 +62,24 @@ services:
       - "traefik.http.routers.install.middlewares=install-stripprefix@docker"
       - "traefik.http.middlewares.install-stripprefix.stripprefix.prefixes=/install"
 
+  redis:
+    image: redis:6.2-alpine
+    container_name: redis
+    restart: always
+
+  flashpaper:
+    image: ghcr.io/the-maldridge/flashpaper:v0.1.2
+    container_name: flashpaper
+    restart: always
+    environment:
+      FLASHPAPER_BASEPATH: /flashpaper
+      REDIS_ADDR: redis:6379
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.flashpaper.rule=Host(`questionable.site`, `www.questionable.site`) && PathPrefix(`/flashpaper`)"
+      - "traefik.http.routers.flashpaper.entrypoints=https"
+      - "traefik.http.routers.flashpaper.tls.certresolver=letsencrypt"
+
 volumes:
   letsencrypt:
   links:
