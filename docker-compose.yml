@@ -26,6 +26,17 @@ services:
       - "/var/run/docker.sock:/var/run/docker.sock:ro"
       - "letsencrypt:/letsencrypt"
 
+  landing:
+    build: ./landing
+    container_name: landing
+    restart: always
+    init: true
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.landing.rule=Host(`questionable.site`, `www.questionable.site`)"
+      - "traefik.http.routers.landing.entrypoints=https"
+      - "traefik.http.routers.landing.tls.certresolver=letsencrypt"
+
   links:
     build: ./links
     container_name: links

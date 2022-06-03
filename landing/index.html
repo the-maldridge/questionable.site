@@ -1,0 +1,68 @@
+<html>
+    <head>
+        <title>Questionable Site</title>
+    </head>
+    <style>
+     body {
+         background: lighttan;
+     }
+     #container {
+         width: 70%;
+         margin-left: auto;
+         margin-right: auto;
+     }
+     #services {
+         display: flex;
+         flex-direction: row;
+         flex-wrap: wrap;
+         width: 100%;
+         gap: 1%;
+     }
+     .center {
+         text-align: center;
+     }
+     .card {
+         border-radius: 0.25em;
+         background: honeydew;
+         padding: 1em;
+         width: 30%;
+         position: relative;
+     }
+     .card-header {
+         text-align: center;
+     }
+     .card-footer {
+         font-size: x-small;
+         text-align: right;
+         position: absolute;
+         bottom: 0.5em;
+         right: 0.5em;
+     }
+    </style>
+    <body>
+        <div id="container">
+            <div>
+                <h1 class="center">Questionable Services</h1>
+                <p>Questionable Site is a hosting provider of questionable services.  Need to raise eyebrow with your friendly network security engineer? Our URL is sure to not dissapoint!</p>
+                <p>Services currently offered are listed below.  Feel free to suggest additional services by writing to <a href="mailto:services@questionable.site">services@questionable.site</a></p>
+            </div>
+            <div id="services">
+                <div class="card">
+                    <div class="card-header"><h2>Links</h2></div>
+                    <div class="card-description">Links is a link shortener.  It is able to use both pre-determined link names and randomly generated names.  Find more information on <a href="/link">/link</a>.</div>
+                    <div class="card-footer"><a href="https://git.fsh.ee/i/link">Software by fsh.ee</a></div>
+                </div>
+                <div class="card">
+                    <div class="card-header"><h2>FlashPaper</h2></div>
+                    <div class="card-description">FlashPaper is an ephemeral paste service.  It is useful for transfering very small bits of data that you want to self-destruct on receipt. <a href="/flashpaper">/flashpaper</a>.</div>
+                    <div class="card-footer"><a href="https://github.com/the-maldridge/flashpaper">Software by @the-maldridge</a></div>
+                </div>
+                <div class="card">
+                    <div class="card-header"><h2>Install</h2></div>
+                    <div class="card-description">Install generates scripts for passing to a shell to recklessly install software from the internet.  More information at <a href="/install">/install</a>.</div>
+                    <div class="card-footer"><a href="https://github.com/jpillora/installer">Software by @jpillora</a></div>
+                </div>
+            </div>
+        </div>
+    </body>
+</html>
