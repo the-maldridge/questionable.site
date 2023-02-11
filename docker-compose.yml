@@ -91,6 +91,17 @@ services:
       - "traefik.http.routers.flashpaper.entrypoints=https"
       - "traefik.http.routers.flashpaper.tls.certresolver=letsencrypt"
 
+  vdo:
+    build: ./vdo
+    container_name: vdo
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.vdo.rule=Host(`questionable.site`, `www.questionable.site`) && PathPrefix(`/vdo`)"
+      - "traefik.http.routers.vdo.entrypoints=https"
+      - "traefik.http.routers.vdo.tls.certresolver=letsencrypt"
+      - "traefik.http.routers.vdo.middlewares=vdo-stripprefix@docker"
+      - "traefik.http.middlewares.vdo-stripprefix.stripprefix.prefixes=/vdo"
+
 volumes:
   letsencrypt:
   links:
