@@ -3,7 +3,7 @@ version: "3.3"
 services:
 
   traefik:
-    image: "traefik:v2.7.0"
+    image: "traefik:v3.1.2"
     container_name: "traefik"
     restart: "always"
     command:
@@ -17,7 +17,6 @@ services:
       - "--certificatesresolvers.letsencrypt.acme.httpchallenge.entrypoint=http"
       - "--certificatesresolvers.letsencrypt.acme.email=letsencrypt@questionable.site"
       - "--certificatesresolvers.letsencrypt.acme.storage=/letsencrypt/acme.json"
-      - "--pilot.dashboard=false"
     ports:
       - "80:80"
       - "443:443"
@@ -33,7 +32,7 @@ services:
     init: true
     labels:
       - "traefik.enable=true"
-      - "traefik.http.routers.landing.rule=Host(`questionable.site`, `www.questionable.site`)"
+      - "traefik.http.routers.landing.rule=Host(`questionable.site`)"
       - "traefik.http.routers.landing.entrypoints=https"
       - "traefik.http.routers.landing.tls.certresolver=letsencrypt"
 
@@ -45,7 +44,7 @@ services:
       USER: the-maldridge
     labels:
       - "traefik.enable=true"
-      - "traefik.http.routers.install.rule=Host(`questionable.site`, `www.questionable.site`) && PathPrefix(`/install`)"
+      - "traefik.http.routers.install.rule=Host(`questionable.site`) && PathPrefix(`/install`)"
       - "traefik.http.routers.install.entrypoints=https"
       - "traefik.http.routers.install.tls.certresolver=letsencrypt"
       - "traefik.http.routers.install.middlewares=install-stripprefix@docker"
@@ -65,7 +64,7 @@ services:
       REDIS_ADDR: redis:6379
     labels:
       - "traefik.enable=true"
-      - "traefik.http.routers.flashpaper.rule=Host(`questionable.site`, `www.questionable.site`) && PathPrefix(`/flashpaper`)"
+      - "traefik.http.routers.flashpaper.rule=Host(`questionable.site`) && PathPrefix(`/flashpaper`)"
       - "traefik.http.routers.flashpaper.entrypoints=https"
       - "traefik.http.routers.flashpaper.tls.certresolver=letsencrypt"
 
@@ -74,7 +73,7 @@ services:
     container_name: vdo
     labels:
       - "traefik.enable=true"
-      - "traefik.http.routers.vdo.rule=Host(`questionable.site`, `www.questionable.site`) && PathPrefix(`/vdo`)"
+      - "traefik.http.routers.vdo.rule=Host(`questionable.site`) && PathPrefix(`/vdo`)"
       - "traefik.http.routers.vdo.entrypoints=https"
       - "traefik.http.routers.vdo.tls.certresolver=letsencrypt"
       - "traefik.http.routers.vdo.middlewares=vdo-stripprefix@docker"
