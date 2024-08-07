@@ -37,28 +37,6 @@ services:
       - "traefik.http.routers.landing.entrypoints=https"
       - "traefik.http.routers.landing.tls.certresolver=letsencrypt"
 
-  links:
-    build: ./links
-    container_name: links
-    restart: always
-    command:
-      - "-db"
-      - "/db/links"
-      - "-seed"
-      - "${LINKS_SEED}"
-      - "-url"
-      - "https://questionable.site/link/"
-      - "-v"
-    volumes:
-      - links:/db
-    labels:
-      - "traefik.enable=true"
-      - "traefik.http.routers.links.rule=Host(`questionable.site`, `www.questionable.site`) && PathPrefix(`/link`)"
-      - "traefik.http.routers.links.entrypoints=https"
-      - "traefik.http.routers.links.tls.certresolver=letsencrypt"
-      - "traefik.http.routers.links.middlewares=links-stripprefix@docker"
-      - "traefik.http.middlewares.links-stripprefix.stripprefix.prefixes=/link"
-
   install:
     build: ./install
     container_name: install
@@ -103,7 +81,7 @@ services:
       - "traefik.http.middlewares.vdo-stripprefix.stripprefix.prefixes=/vdo"
 
   vcfsw:
-    image: sneakynet/vcfsw:3
+    image: sneakynet/vcfsw:4
     container_name: vcfsw_sneakynet
     restart: always
     labels:
