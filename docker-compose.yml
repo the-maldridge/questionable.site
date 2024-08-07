@@ -89,6 +89,25 @@ services:
       - "traefik.http.routers.vcfsw.entrypoints=https"
       - "traefik.http.routers.vcfsw.tls.certresolver=letsencrypt"
 
+  gokapi:
+    image: docker.io/f0rc3/gokapi:v1.9.1
+    container_name: gokapi
+    restart: always
+    environment:
+      TZ: UTC
+    ports:
+      - 127.0.0.1:53842:53842
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.gokapi.rule=Host(`files.questionable.site`)"
+      - "traefik.http.routers.gokapi.entrypoints=https"
+      - "traefik.http.routers.gokapi.tls.certresolver=letsencrypt"
+    volumes:
+      - "gokapi_data:/app/data"
+      - "gokapi_config:/app/config"
+
 volumes:
   letsencrypt:
   links:
+  gokapi_data:
+  gokapi_config:
