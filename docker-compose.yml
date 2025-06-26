@@ -90,6 +90,16 @@ services:
       - "traefik.http.routers.vcfsw.entrypoints=https"
       - "traefik.http.routers.vcfsw.tls.certresolver=letsencrypt"
 
+  sneakynet_docs:
+    image: sneakynet/docs:1
+    container_name: sneakynet_docs
+    restart: always
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.sneakynet.rule=Host(`docs.sneaky.nonroutable.network`)"
+      - "traefik.http.routers.sneakynet.entrypoints=https"
+      - "traefik.http.routers.sneakynet.tls.certresolver=letsencrypt"
+
   gokapi:
     image: docker.io/f0rc3/gokapi:v1.9.1
     container_name: gokapi
