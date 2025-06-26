@@ -81,7 +81,7 @@ services:
       - "traefik.http.middlewares.vdo-stripprefix.stripprefix.prefixes=/vdo"
 
   vcfsw:
-    image: sneakynet/vcfsw:5
+    image: sneakynet/vcfsw:7
     container_name: vcfsw_sneakynet
     restart: always
     labels:
@@ -117,8 +117,43 @@ services:
       - "traefik.http.routers.isthisonline.entrypoints=https"
       - "traefik.http.routers.isthisonline.tls.certresolver=letsencrypt"
 
+  troublinglink_db:
+    image: docker.io/library/mariadb:11
+    container_name: troublinglink-db
+    restart: always
+    env_file: .env
+    volumes:
+      - "shlink_db:/var/lib/mysql:Z"
+
+  troublinglink_shlink:
+    image: ghcr.io/shlinkio/shlink:stable
+    container_name: troublinglink-shlink
+    restart: always
+    env_file: .env
+    environment:
+      DEFAULT_DOMAIN: troubling.link
+      IS_HTTPS_ENABLED: true
+      TIMEZONE: America/Chicago
+      DB_DRIVER: maria
+      DB_HOST: troublinglink_db
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.shlink.rule=Host(`troubling.link`)"
+      - "traefik.http.routers.shlink.entrypoints=https"
+      - "traefik.http.routers.shlink.tls.certresolver=letsencrypt"
+
+  troublinglink_shlinkui:
+    image: ghcr.io/shlinkio/shlink-web-client:stable
+    container_name: troublinglink-shlinkui
+    restart: always
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.shlinkui.rule=Host(`ui.troubling.link`)"
+      - "traefik.http.routers.shlinkui.entrypoints=https"
+      - "traefik.http.routers.shlinkui.tls.certresolver=letsencrypt"
 volumes:
   letsencrypt:
   links:
   gokapi_data:
   gokapi_config:
+  shlink_db:
